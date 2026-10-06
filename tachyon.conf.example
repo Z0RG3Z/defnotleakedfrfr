@@ -1,0 +1,31 @@
+# Tachyon config file. Load with:  tachyon --config /etc/tachyon.conf
+# Simple `key = value`; '#' starts a comment. CLI flags override these.
+
+port            = 7777
+encrypt         = true          # RecRoom 0x11 marker layer
+fork            = true          # 24-byte forked NGO batch header
+dissonance      = true          # act as the Dissonance session server
+log_level       = info          # error | warn | info | debug
+
+# Room enforcement: resolve AccountId -> room instance via recflare.
+rooms           = true
+room_url        = https://match.recflare.net/tachyon
+room_timeout_ms = 2000
+# Threads running lookups concurrently; the relay thread never waits on recflare.
+room_workers    = 4
+
+# RSA private key (path to a file containing .NET RSAKeyValue XML). Its public half is the key
+# the client encrypts AT/VB/CKA/CIA/CPK to; the server decrypts those blobs with this key.
+# private_key   = /etc/tachyon/private-key.xml
+
+# Shared HS256 secret that signs the client's access-token JWT (inside the AT blob). When BOTH this
+# and private_key are set, the server verifies every connection's token (signature, expiry, and that
+# its subject matches the AccountId) and disconnects anyone who fails - the server is private. Leave
+# it empty (or omit private_key) to disable auth and keep the server public.
+# jwt_secret    = change-me-to-the-recflare-signing-secret
+
+# How long a peer may go silent before the server drops it, and how often the server pings it.
+# The client leaves the room for its dorm after ~5s without a packet from us, so the server must be
+# the patient side: a brief uplink stall on the client must not end the session.
+# disconnect_timeout_ms = 20000
+# ping_interval_ms = 500
